@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="/static/icons8-lightning-bolt-keek-96.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monitor UPS</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>&#9889; Monitor UPS</h1>
+  <div id="tabs">
+    <button class="tab active" onclick="mostrarVista('dashboard',this)">Dashboard</button>
+    <button class="tab" id="tab-alertas" onclick="mostrarVista('alertas',this)">&#9888; Alertas</button>
+    <button class="tab" onclick="mostrarVista('historial',this)">Historial</button>
+    <button class="tab" onclick="mostrarVista('admin',this)">&#9881; Administrar</button>
+  </div>
+  <div id="estado-bar">
+    <div class="stat">Total:<span id="cnt-total"> -</span></div>
+    <div class="stat ok-c">OK:<span id="cnt-ok"> -</span></div>
+    <div class="stat bat-c">Alerta:<span id="cnt-alerta"> -</span></div>
+    <div class="stat falla-c">Falla:<span id="cnt-falla"> -</span></div>
+    <div class="stat sin-c">Sin resp:<span id="cnt-sin"> -</span></div>
+    <div id="tiempo">...</div>
+  </div>
+</header>
+
+<div id="alerta-overlay"></div>
+
+<main>
+  <!-- DASHBOARD -->
+  <div id="view-dashboard" class="view active">
+    <div class="leyenda">
+      <span class="leyenda-item"><span class="dot verde"></span>En linea normal</span>
+      <span class="leyenda-item"><span class="dot naranja"></span>Carga &gt; 40% potencia nominal</span>
+      <span class="leyenda-item"><span class="dot rojo"></span>Desconectada / En bateria / Falla / Voltaje &lt; 200V / Bateria &lt; 30%</span>
+    </div>
+    <div id="contenido"><p class="cargando">Cargando UPS...</p></div>
+  </div>
+
+  <!-- ALERTAS -->
+  <div id="view-alertas" class="view">
+    <div id="alertas-contenido">
+      <p class="alerta-vacia">&#10003; Sin alertas activas.</p>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="view-historial" class="view">
+    <div id="hist-controles">
+      <select id="hist-select" onchange="cargarHistorial()">
+        <option value="">Seleccionar semana...</option>
+      </select>
+      <a id="btn-descargar" class="btn hidden" download>&#8615; Descargar Excel</a>
+    </div>
+    <div id="hist-tabla-wrap">
+      <p class="hist-vacio">Selecciona una semana para ver el historial.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="view-admin" class="view">
+    <div id="admin-toolbar">
+      <input id="admin-buscar" type="text"
+             placeholder="Buscar por nombre, IP, sala..."
+             oninput="renderTablaAdmin()">
+      <button class="btn green" onclick="abrirModal()">+ Agregar UPS</button>
+      <span id="admin-total" style="font-size:12px;color:#555"></span>
+    </div>
+    <div id="admin-tabla-wrap">
+      <table id="admin-tabla">
+        <thead><tr>
+          <th>#</th><th>Nombre</th><th>Sala</th><th>Ubicacion</th>
+          <th>IP</th><th>Marca</th><th>Modelo</th><th>Community</th><th></th>
+        </tr></thead>
+        <tbody id="admin-tbody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:#333;margin-top:8px">
+      Los cambios se aplican en el proximo ciclo (10 seg).
+    </p>
+  </div>
+</main>
+
+<!-- MODAL AGREGAR/EDITAR -->
+<div id="modal-bg" class="modal-bg hidden"
+     onclick="if(event.target===this)cerrarModal()">
+  <div class="modal">
+    <h3 id="modal-titulo">Agregar UPS</h3>
+    <input type="hidden" id="edit-index" value="-1">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input id="f-nombre" type="text" placeholder="Ej: A-G1-UPS3">
+      </div>
+      <div class="form-group">
+        <label>IP *</label>
+        <input id="f-ip" type="text" placeholder="10.44.87.XXX">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Sala *</label>
+        <input id="f-sala" type="text" placeholder="Ej: A">
+      </div>
+      <div class="form-group">
+        <label>Ubicacion *</label>
+        <input id="f-ubicacion" type="text" placeholder="Ej: Terminal PA">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Marca *</label>
+        <select id="f-marca">
+          <option value="eaton">Eaton</option>
+          <option value="kaise">Kaise</option>
+          <option value="inform">Inform</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Modelo</label>
+        <input id="f-modelo" type="text" placeholder="Ej: 9E10Ki">
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label>Community SNMP</label>
+        <input id="f-community" type="text" value="public">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn gray" onclick="probarConexion()">
+        &#128268; Probar conexion
+      </button>
+      <span id="test-spin" class="hidden"
+            style="font-size:11px;color:#666">Probando...</span>
+    </div>
+    <div id="test-resultado"></div>
+    <div class="modal-footer">
+      <button class="btn gray" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn red hidden" id="btn-eliminar"
+              onclick="eliminarUPS()">&#128465; Eliminar</button>
+      <button class="btn" onclick="guardarUPS()">&#10003; Guardar</button>
+    </div>
+  </div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
