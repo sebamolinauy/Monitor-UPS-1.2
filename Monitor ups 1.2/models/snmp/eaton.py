@@ -1,4 +1,4 @@
-from models.snmp.base import snmpget
+from models.snmp.base import snmpget_multi
 
 POTENCIAS_EATON = {
     '9e6ki'         : 4800,
@@ -8,19 +8,40 @@ POTENCIAS_EATON = {
     '9px30000irt2u' : 30000,
 }
 
+OIDS_EATON_9E = [
+    ('modelo',         '1.3.6.1.4.1.534.1.1.2.0'),
+    ('autonomia_seg',  '1.3.6.1.4.1.534.1.2.1.0'),
+    ('bateria_pct',    '1.3.6.1.4.1.534.1.2.4.0'),
+    ('voltaje_entrada','1.3.6.1.4.1.534.1.3.4.1.2.1'),
+    ('voltaje_salida', '1.3.6.1.4.1.534.1.4.4.1.2.1'),
+    ('carga_w',        '1.3.6.1.4.1.534.1.4.4.1.4.1'),
+    ('temperatura',    '1.3.6.1.4.1.534.1.6.1.0'),
+    ('estado_raw',     '1.3.6.1.4.1.534.1.8.1.0'),
+]
+
+OIDS_EATON_9SX = [
+    ('modelo',         '1.3.6.1.4.1.534.1.1.2.0'),
+    ('autonomia_seg',  '1.3.6.1.4.1.534.1.2.1.0'),
+    ('bateria_pct',    '1.3.6.1.4.1.534.1.2.4.0'),
+    ('voltaje_entrada','1.3.6.1.4.1.534.1.3.8.1.0'),
+    ('voltaje_salida', '1.3.6.1.4.1.534.1.4.9.1.0'),
+    ('carga_w',        '1.3.6.1.4.1.534.1.4.9.3.0'),
+    ('carga_pct',      '1.3.6.1.4.1.534.1.4.1.0'),
+    ('temperatura',    '1.3.6.1.4.1.534.1.6.1.0'),
+    ('estado_raw',     '1.3.6.1.4.1.534.1.8.1.0'),
+]
+
+
+def _consultar_oids(ip: str, community: str, oids: list[tuple[str, str]]) -> dict[str, str | None]:
+    oid_list = [oid for _, oid in oids]
+    valores = snmpget_multi(ip, community, '1', oid_list)
+    return {nombre: valores.get(oid) for nombre, oid in oids}
+
+
 def consultar_eaton_9e(ups: dict) -> dict:
     """Consulta UPS Eaton monofasico (9E, 9PX)."""
     ip, c = ups['ip'], ups['community']
-    raw = {
-        'modelo'         : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.1.2.0'),
-        'autonomia_seg'  : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.2.1.0'),
-        'bateria_pct'    : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.2.4.0'),
-        'voltaje_entrada': snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.3.4.1.2.1'),
-        'voltaje_salida' : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.4.4.1.2.1'),
-        'carga_w'        : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.4.4.1.4.1'),
-        'temperatura'    : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.6.1.0'),
-        'estado_raw'     : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.8.1.0'),
-    }
+    raw = _consultar_oids(ip, c, OIDS_EATON_9E)
     estados = {'1':'En linea','2':'En bateria','3':'Bypass','4':'Falla','5':'Apagando'}
     carga_w    = int(raw['carga_w']) if raw['carga_w'] else None
     modelo_key = ups['modelo'].lower().strip()
@@ -38,20 +59,11 @@ def consultar_eaton_9e(ups: dict) -> dict:
         'estado'         : estados.get(raw['estado_raw'], 'Sin respuesta') if raw['estado_raw'] else 'Sin respuesta',
     }
 
+
 def consultar_eaton_9sx(ups: dict) -> dict:
     """Consulta UPS Eaton trifasico (9SX). Estados y OIDs diferentes al 9E."""
     ip, c = ups['ip'], ups['community']
-    raw = {
-        'modelo'         : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.1.2.0'),
-        'autonomia_seg'  : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.2.1.0'),
-        'bateria_pct'    : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.2.4.0'),
-        'voltaje_entrada': snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.3.8.1.0'),
-        'voltaje_salida' : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.4.9.1.0'),
-        'carga_w'        : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.4.9.3.0'),
-        'carga_pct'      : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.4.1.0'),
-        'temperatura'    : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.6.1.0'),
-        'estado_raw'     : snmpget(ip, c, '1', '1.3.6.1.4.1.534.1.8.1.0'),
-    }
+    raw = _consultar_oids(ip, c, OIDS_EATON_9SX)
     estados = {
         '1':'Sin soporte', '2':'En linea',  '3':'Bypass',
         '4':'En bateria',  '5':'En linea',  '6':'En linea',
@@ -68,6 +80,7 @@ def consultar_eaton_9sx(ups: dict) -> dict:
         'temperatura'    : int(raw['temperatura'])       if raw['temperatura']     else None,
         'estado'         : estados.get(raw['estado_raw'], 'Sin respuesta') if raw['estado_raw'] else 'Sin respuesta',
     }
+
 
 def consultar_eaton(ups: dict) -> dict:
     """Detecta el modelo y llama a la funcion correcta."""

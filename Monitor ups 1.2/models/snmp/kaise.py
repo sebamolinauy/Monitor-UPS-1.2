@@ -1,17 +1,22 @@
-from models.snmp.base import snmpget
+from models.snmp.base import snmpget_multi
+
+OIDS_KAISE = [
+    ('autonomia_min',  '1.3.6.1.4.1.935.1.1.1.2.2.3.0'),
+    ('bateria_pct',    '1.3.6.1.4.1.935.1.1.1.2.2.1.0'),
+    ('temperatura',    '1.3.6.1.4.1.935.1.1.1.2.2.2.0'),
+    ('estado_raw',     '1.3.6.1.4.1.935.1.1.1.3.1.1.0'),
+    ('voltaje_entrada','1.3.6.1.4.1.935.1.1.1.3.2.1.0'),
+    ('voltaje_salida', '1.3.6.1.4.1.935.1.1.1.4.2.1.0'),
+    ('carga_pct',      '1.3.6.1.4.1.935.1.1.1.4.2.3.0'),
+]
+
 
 def consultar_kaise(ups: dict) -> dict:
     """Consulta UPS Kaise. Autonomia viene en minutos directamente."""
     ip, c = ups['ip'], ups['community']
-    raw = {
-        'autonomia_min'  : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.2.2.3.0'),
-        'bateria_pct'    : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.2.2.1.0'),
-        'temperatura'    : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.2.2.2.0'),
-        'estado_raw'     : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.3.1.1.0'),
-        'voltaje_entrada': snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.3.2.1.0'),
-        'voltaje_salida' : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.4.2.1.0'),
-        'carga_pct'      : snmpget(ip, c, '1', '1.3.6.1.4.1.935.1.1.1.4.2.3.0'),
-    }
+    oid_list = [oid for _, oid in OIDS_KAISE]
+    valores = snmpget_multi(ip, c, '1', oid_list)
+    raw = {nombre: valores.get(oid) for nombre, oid in OIDS_KAISE}
     estados = {'1':'En linea','2':'En bateria','3':'Bypass','4':'Falla'}
     return {
         'modelo'         : ups['modelo'],
