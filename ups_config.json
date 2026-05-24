@@ -1,0 +1,245 @@
+[
+  {
+    "nombre": "UPS Oficina Migraciones",
+    "ip": "10.44.87.127",
+    "sala": "Oficina Migraciones",
+    "ubicacion": "Terminal PB",
+    "marca": "eaton",
+    "modelo": "9px3000i",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-A UPS 1 Grupo 1",
+    "ip": "10.44.87.95",
+    "sala": "ST-A",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-A UPS 2 Grupo 1",
+    "ip": "10.44.87.96",
+    "sala": "ST-A",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-A UPS 1 Grupo 2",
+    "ip": "10.44.87.137",
+    "sala": "ST-A",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9E10Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-C UPS 1",
+    "ip": "10.44.87.93",
+    "sala": "ST-C",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9E10Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-C UPS 2",
+    "ip": "10.44.87.94",
+    "sala": "ST-C",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9E10Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-D UPS 1",
+    "ip": "10.44.87.136",
+    "sala": "ST-D",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-D BORDING CONTROL",
+    "ip": "10.44.87.135",
+    "sala": "ST-D",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "eaton",
+    "modelo": "9PX1500i",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-E UPS 1",
+    "ip": "10.44.87.136",
+    "sala": "ST-E",
+    "ubicacion": "Terminal Comercial PA",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-F UPS 1",
+    "ip": "10.44.87.123",
+    "sala": "Shelter Parking",
+    "ubicacion": "Parking",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-H UPS 1",
+    "ip": "10.44.87.132",
+    "sala": "ST-H",
+    "ubicacion": "Lateral tecnico D",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-I UPS 1",
+    "ip": "10.44.87.119",
+    "sala": "ST-I",
+    "ubicacion": "ST-I",
+    "marca": "eaton",
+    "modelo": "9E10Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-I UPS 2",
+    "ip": "10.44.87.120",
+    "sala": "ST-I",
+    "ubicacion": "ST-I",
+    "marca": "eaton",
+    "modelo": "9E10Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-K UPS 1",
+    "ip": "10.44.87.121",
+    "sala": "ST-K",
+    "ubicacion": "TGBT TAG",
+    "marca": "eaton",
+    "modelo": "9SX20KP",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-K UPS 2",
+    "ip": "10.44.87.122",
+    "sala": "ST-K",
+    "ubicacion": "TGBT TAG",
+    "marca": "eaton",
+    "modelo": "9SX20KP",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-M UPS 1",
+    "ip": "10.44.87.130",
+    "sala": "ST-M",
+    "ubicacion": "Tablero general Planta de tratamientos",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-O UPS 1",
+    "ip": "10.44.87.116",
+    "sala": "ST-O",
+    "ubicacion": "FEC 06-26",
+    "marca": "eaton",
+    "modelo": "9px3000i",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-P UPS 1",
+    "ip": "10.44.87.129",
+    "sala": "ST-P",
+    "ubicacion": "Deposito de Residuos",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-Q UPS 1",
+    "ip": "10.44.87.97",
+    "sala": "ST-Q",
+    "ubicacion": "FEC 01-19",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-Q UPS 2",
+    "ip": "10.44.87.98",
+    "sala": "ST-Q",
+    "ubicacion": "FEC 01-19",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-R UPS 1",
+    "ip": "10.44.87.99",
+    "sala": "ST-R",
+    "ubicacion": "Torre de Control",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-R UPS 2",
+    "ip": "10.44.87.100",
+    "sala": "ST-R",
+    "ubicacion": "Torre de Control",
+    "marca": "eaton",
+    "modelo": "9E6Ki",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-S",
+    "ip": "10.44.87.125",
+    "sala": "ST-S",
+    "ubicacion": "EMA INUMET",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-U",
+    "ip": "10.44.87.128",
+    "sala": "ST-U",
+    "ubicacion": "Cuartel de Bomberos",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-V UPS 1",
+    "ip": "10.44.87.124",
+    "sala": "ST-V",
+    "ubicacion": "AWOS IMS",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-W",
+    "ip": "10.44.87.118",
+    "sala": "ST-W",
+    "ubicacion": "VOR-DME",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  },
+  {
+    "nombre": "ST-X",
+    "ip": "10.44.87.126",
+    "sala": "ST-X",
+    "ubicacion": "DF",
+    "marca": "kaise",
+    "modelo": "KUKS-RT03",
+    "community": "public"
+  }
+]
